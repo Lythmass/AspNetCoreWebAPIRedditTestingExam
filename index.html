@@ -1,0 +1,70 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reddit2 Frontend</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+
+        #postsSection, #weatherSection {
+            margin-bottom: 20px;
+        }
+
+        #posts div, #weather div {
+            border: 1px solid #ddd;
+            margin-top: 10px;
+            padding: 10px;
+        }
+
+        button, input, textarea {
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div id="postsSection">
+        <h2>Posts</h2>
+        <div id="posts"></div>
+    </div>
+
+    <script>
+        // Base URL of your API
+        const baseUrl = 'https://localhost:7297/api';
+
+        // Function to load posts
+        async function loadPosts() {
+            try {
+                const response = await fetch(`${baseUrl}/Posts`, {
+                    method: 'GET'
+                });
+                const posts = await response.json();
+                console.log(posts);
+
+                const postsContainer = document.getElementById('posts');
+                postsContainer.innerHTML = ''; // Clear existing posts
+
+                // Iterate over each post and add it to the DOM
+                posts.forEach(post => {
+                    const postElement = document.createElement('div');
+                    postElement.innerHTML = `
+                        <h3>${post.title}</h3>
+                        <p>${post.content}</p>
+                        <small>Upvotes: ${post.upvotes} | Downvotes: ${post.downvotes}</small>
+                    `;
+                    postsContainer.appendChild(postElement);
+                });
+            } catch (error) {
+                console.error('Failed to load posts:', error);
+            }
+        }
+
+        // Call loadPosts on window load
+        window.onload = function() {
+            loadPosts();
+        };
+    </script>
+</body>
+</html>
