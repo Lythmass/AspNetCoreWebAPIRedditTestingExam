@@ -1,0 +1,64 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reddit2 Frontend</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+
+        #postsSection, #weatherSection {
+            margin-bottom: 20px;
+        }
+
+        #posts div, #weather div {
+            border: 1px solid #ddd;
+            margin-top: 10px;
+            padding: 10px;
+        }
+
+        button, input, textarea {
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div id="postsSection">
+        <h2>Create Post</h2>
+        <div id="postForm">
+            <input type="text" id="title" name="title" placeholder="Title" />
+            <textarea id="content" name="content" placeholder="Content"></textarea>
+            <button onclick="createPost()">Create Post</button>
+        </div>
+    </div>
+
+    <script>
+        const baseUrl = 'https://localhost:7297/api';
+
+        async function createPost() {
+            try {
+
+                    const title = document.getElementById('title').value;
+                    const content = document.getElementById('content').value;
+
+                    const response = await fetch(`${baseUrl}/Posts`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({ title, content })
+                    });
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok.');
+                    }
+                    const newPost = await response.json();
+                    console.log(newPost);
+            } catch (error) {
+                console.error('Failed to create post:', error);
+            }
+        }
+    </script>
+</body>
+</html>

@@ -9,7 +9,7 @@ namespace Reddit.Models
         public string Title { get; set; }
         public string Content { get; set; }
         public int AuthorId { get; set; }
-        public ICollection<Comment> Comments { get; set; }
+        public ICollection<Comment> Comments { get; set; } = new List<Comment>();
         public int  Upvotes { get; set; }
         public int  Downvotes{ get; set; }
     }

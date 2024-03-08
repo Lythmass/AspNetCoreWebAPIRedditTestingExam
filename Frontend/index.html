@@ -31,10 +31,8 @@
     </div>
 
     <script>
-        // Base URL of your API
         const baseUrl = 'https://localhost:7297/api';
 
-        // Function to load posts
         async function loadPosts() {
             try {
                 const response = await fetch(`${baseUrl}/Posts`, {
@@ -60,6 +58,8 @@
                 console.error('Failed to load posts:', error);
             }
         }
+
+     
 
         // Call loadPosts on window load
         window.onload = function() {
