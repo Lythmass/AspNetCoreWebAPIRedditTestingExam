@@ -1,11 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Reddit;
+using Reddit.Dtos;
 using Reddit.Models;
 
 namespace Reddit.Controllers
@@ -76,8 +71,14 @@ namespace Reddit.Controllers
         // POST: api/Posts
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<Post>> PostPost(Post post)
+        public async Task<ActionResult<Post>> PostPost(CreatePostDto createPostDto)
         {
+            var post = new Post
+            {
+                Title = createPostDto.Title,
+                Content = createPostDto.Content
+            };
+
             _context.Posts.Add(post);
             await _context.SaveChangesAsync();
 
