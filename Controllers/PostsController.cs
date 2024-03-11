@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Reddit;
 using Reddit.Dtos;
+using Reddit.Mapper;
 using Reddit.Models;
 
 namespace Reddit.Controllers
@@ -10,10 +12,12 @@ namespace Reddit.Controllers
     public class PostsController : ControllerBase
     {
         private readonly ApplcationDBContext _context;
+        private readonly IMapper _mapper;
 
-        public PostsController(ApplcationDBContext context)
+        public PostsController(ApplcationDBContext context, IMapper mapper)
         {
             _context = context;
+            _mapper = mapper;
         }
 
         // GET: api/Posts
@@ -73,11 +77,7 @@ namespace Reddit.Controllers
         [HttpPost]
         public async Task<ActionResult<Post>> PostPost(CreatePostDto createPostDto)
         {
-            var post = new Post
-            {
-                Title = createPostDto.Title,
-                Content = createPostDto.Content
-            };
+            var post = _mapper.toPost(createPostDto);
 
             _context.Posts.Add(post);
             await _context.SaveChangesAsync();
