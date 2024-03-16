@@ -16,7 +16,7 @@ namespace Reddit
         }
 
         public DbSet<Post> Posts { get; set; }
-        public DbSet<Author> Authors { get; set; }
+        public DbSet<User> Users { get; set; }
         public DbSet<Comment> Comments { get; set; }
     }
 }

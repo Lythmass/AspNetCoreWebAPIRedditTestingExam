@@ -1,6 +1,6 @@
 ﻿namespace Reddit.Controllers
 {
-    public class CreateAuthorDto
+    public class CreateUserDto
     {
         public string Name { get; set; }
     }

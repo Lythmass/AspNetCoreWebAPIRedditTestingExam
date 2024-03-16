@@ -102,9 +102,9 @@ namespace Reddit.Controllers
         }
 
         [HttpPost("CreateAuthor")]
-        public async Task<IActionResult> CreateAuthor(Author author)
+        public async Task<IActionResult> CreateAuthor(User author)
         {
-            await _context.Authors.AddAsync(author);
+            await _context.Users.AddAsync(author);
             return Ok();
         }
 

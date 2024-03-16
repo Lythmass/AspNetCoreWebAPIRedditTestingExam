@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Reddit.Models
 {
@@ -10,7 +11,8 @@ namespace Reddit.Models
         public string Content { get; set; }
 
         public int? AuthorId { get; set; }
-        public virtual Author? Author { get; set; }
+        [ForeignKey(nameof(AuthorId))]
+        public virtual User? Author { get; set; }
         public virtual ICollection<Comment> Comments { get; set; } = new List<Comment>();
         public int  Upvotes { get; set; }
         public int  Downvotes{ get; set; }

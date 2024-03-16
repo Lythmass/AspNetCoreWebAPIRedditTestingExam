@@ -2,7 +2,7 @@
 
 namespace Reddit.Models
 {
-    public class Author
+    public class User
     {
         [Key]
         public int Id { get; set; }
