@@ -101,6 +101,13 @@ namespace Reddit.Controllers
             return NoContent();
         }
 
+        [HttpPost("CreateAuthor")]
+        public async Task<IActionResult> CreateAuthor(Author author)
+        {
+            await _context.Authors.AddAsync(author);
+            return Ok();
+        }
+
         private bool PostExists(int id)
         {
             return _context.Posts.Any(e => e.Id == id);

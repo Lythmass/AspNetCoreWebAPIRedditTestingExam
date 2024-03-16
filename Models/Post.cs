@@ -8,9 +8,13 @@ namespace Reddit.Models
         public int Id { get; set; }
         public string Title { get; set; }
         public string Content { get; set; }
-        public int AuthorId { get; set; }
-        public ICollection<Comment> Comments { get; set; } = new List<Comment>();
+
+        public int? AuthorId { get; set; }
+        public virtual Author? Author { get; set; }
+        public virtual ICollection<Comment> Comments { get; set; } = new List<Comment>();
         public int  Upvotes { get; set; }
         public int  Downvotes{ get; set; }
+        public DateTime CreateAt { get; set; } = DateTime.UtcNow;
+        public DateTime? UpdatedAt { get; set; }
     }
 }
