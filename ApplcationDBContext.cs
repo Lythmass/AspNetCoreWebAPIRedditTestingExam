@@ -5,12 +5,11 @@ namespace Reddit
 {
     public class ApplcationDBContext: DbContext
     {
-
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        public ApplcationDBContext(DbContextOptions<ApplcationDBContext> dbContextOptions): base(dbContextOptions)
         {
-            optionsBuilder.UseSqlite("Data Source=MyDatabase.db");
         }
 
         public DbSet<Post> Posts { get; set; }
+        public DbSet<Comment> Comments { get; set; }
     }
 }

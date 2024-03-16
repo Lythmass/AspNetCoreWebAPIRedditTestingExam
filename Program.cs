@@ -1,3 +1,5 @@
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Reddit;
 using Reddit.Mapper;
 
@@ -9,7 +11,7 @@ builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-builder.Services.AddDbContext<ApplcationDBContext>();
+builder.Services.AddDbContext<ApplcationDBContext>(options => options.UseSqlite(builder.Configuration.GetConnectionString("SqliteDb")));
 builder.Services.AddCors(options =>
 {
     options.AddDefaultPolicy(
