@@ -1,4 +1,4 @@
-﻿namespace Reddit.Controllers
+﻿namespace Reddit.Dtos
 {
     public class CommentDto
     {
