@@ -18,6 +18,7 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddDbContext<ApplcationDBContext>(options => {
     options.UseSqlite(builder.Configuration.GetConnectionString("SqliteDb"));
     options.UseLazyLoadingProxies();
+    options.LogTo(Console.WriteLine, LogLevel.Information);
     });
 
 builder.Services.AddCors(options =>
