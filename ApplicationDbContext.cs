@@ -16,6 +16,18 @@ namespace Reddit
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<Community>(entity =>
+            {
+                entity.HasOne(c => c.Owner)
+                      .WithMany(u => u.OwnedCommunities)
+                      .HasForeignKey(e => e.OwnerId)
+                      .OnDelete(DeleteBehavior.SetNull); // on delete
+
+
+                entity.HasMany(c => c.Subscribers)
+                      .WithMany(u => u.SubscribedCommunities);
+            });
+
             base.OnModelCreating(modelBuilder);
         }
     }
