@@ -11,10 +11,10 @@ namespace Reddit.Controllers
     [ApiController]
     public class PostsController : ControllerBase
     {
-        private readonly ApplcationDBContext _context;
+        private readonly ApplicationDbContext _context;
         private readonly IMapper _mapper;
 
-        public PostsController(ApplcationDBContext context, IMapper mapper)
+        public PostsController(ApplicationDbContext context, IMapper mapper)
         {
             _context = context;
             _mapper = mapper;

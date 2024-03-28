@@ -10,9 +10,9 @@ namespace Reddit.Controllers
     [ApiController]
     public class UserController : ControllerBase
     {
-        private readonly ApplcationDBContext _context;
+        private readonly ApplicationDbContext _context;
 
-        public UserController(ApplcationDBContext context)
+        public UserController(ApplicationDbContext context)
         {
             _context = context;
         }
@@ -35,6 +35,26 @@ namespace Reddit.Controllers
         public async Task<ActionResult<IEnumerable<User>>> GetAuthors()
         {
             return await _context.Users.ToListAsync();
+        }
+        [HttpPost("JoinCommunity")]
+        public async Task<IActionResult> JoinCommunity(int userId,int communityId)
+        {
+            var community = await _context.Communities.FindAsync(communityId);
+
+            if (community == null)
+            {
+                return NotFound();
+            }
+
+            var user = await _context.Users.FindAsync(userId);
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            user.SubscribedCommunities.Add(community);
+            await _context.SaveChangesAsync();
+            return Ok();
         }
     }
 }

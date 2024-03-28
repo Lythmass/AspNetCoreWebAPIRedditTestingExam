@@ -10,9 +10,9 @@ using Reddit;
 
 namespace Reddit.Migrations
 {
-    [DbContext(typeof(ApplcationDBContext))]
-    [Migration("20240316222058_renameAuthorToUser")]
-    partial class renameAuthorToUser
+    [DbContext(typeof(ApplicationDbContext))]
+    [Migration("20240324215748_Init")]
+    partial class Init
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -23,6 +23,21 @@ namespace Reddit.Migrations
                 .HasAnnotation("Proxies:ChangeTracking", false)
                 .HasAnnotation("Proxies:CheckEquality", false)
                 .HasAnnotation("Proxies:LazyLoading", true);
+
+            modelBuilder.Entity("CommunityUser", b =>
+                {
+                    b.Property<int>("SubscribedCommunitiesId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("SubscribersId")
+                        .HasColumnType("INTEGER");
+
+                    b.HasKey("SubscribedCommunitiesId", "SubscribersId");
+
+                    b.HasIndex("SubscribersId");
+
+                    b.ToTable("CommunitySubscriptions", (string)null);
+                });
 
             modelBuilder.Entity("Reddit.Models.Comment", b =>
                 {
@@ -40,6 +55,33 @@ namespace Reddit.Migrations
                     b.ToTable("Comments");
                 });
 
+            modelBuilder.Entity("Reddit.Models.Community", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<DateTime>("CreateAt")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<int?>("OwnerId")
+                        .HasColumnType("INTEGER");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("OwnerId");
+
+                    b.ToTable("Communities");
+                });
+
             modelBuilder.Entity("Reddit.Models.Post", b =>
                 {
                     b.Property<int>("Id")
@@ -47,6 +89,9 @@ namespace Reddit.Migrations
                         .HasColumnType("INTEGER");
 
                     b.Property<int?>("AuthorId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("CommunityId")
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("Content")
@@ -73,6 +118,8 @@ namespace Reddit.Migrations
 
                     b.HasIndex("AuthorId");
 
+                    b.HasIndex("CommunityId");
+
                     b.ToTable("Posts");
                 });
 
@@ -91,11 +138,36 @@ namespace Reddit.Migrations
                     b.ToTable("Users");
                 });
 
+            modelBuilder.Entity("CommunityUser", b =>
+                {
+                    b.HasOne("Reddit.Models.Community", null)
+                        .WithMany()
+                        .HasForeignKey("SubscribedCommunitiesId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Reddit.Models.User", null)
+                        .WithMany()
+                        .HasForeignKey("SubscribersId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("Reddit.Models.Comment", b =>
                 {
                     b.HasOne("Reddit.Models.Post", null)
                         .WithMany("Comments")
                         .HasForeignKey("PostId");
+                });
+
+            modelBuilder.Entity("Reddit.Models.Community", b =>
+                {
+                    b.HasOne("Reddit.Models.User", "Owner")
+                        .WithMany("OwnedCommunities")
+                        .HasForeignKey("OwnerId")
+                        .OnDelete(DeleteBehavior.SetNull);
+
+                    b.Navigation("Owner");
                 });
 
             modelBuilder.Entity("Reddit.Models.Post", b =>
@@ -104,7 +176,20 @@ namespace Reddit.Migrations
                         .WithMany("Posts")
                         .HasForeignKey("AuthorId");
 
+                    b.HasOne("Reddit.Models.Community", "Community")
+                        .WithMany("Posts")
+                        .HasForeignKey("CommunityId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.Navigation("Author");
+
+                    b.Navigation("Community");
+                });
+
+            modelBuilder.Entity("Reddit.Models.Community", b =>
+                {
+                    b.Navigation("Posts");
                 });
 
             modelBuilder.Entity("Reddit.Models.Post", b =>
@@ -114,6 +199,8 @@ namespace Reddit.Migrations
 
             modelBuilder.Entity("Reddit.Models.User", b =>
                 {
+                    b.Navigation("OwnedCommunities");
+
                     b.Navigation("Posts");
                 });
 #pragma warning restore 612, 618
