@@ -4,6 +4,7 @@ using Reddit;
 using Reddit.Filters;
 using Reddit.Mapper;
 using Reddit.Middlewares;
+using Reddit.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -23,6 +24,7 @@ builder.Services.AddCors(options =>
                                  .AllowAnyHeader());
 });
 builder.Services.AddSingleton<IMapper, Mapper>();
+builder.Services.AddScoped<IPostsRepository, PostsRepository>();
 
 
 var app = builder.Build();
