@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Reddit.Models;
+using System.Linq.Expressions;
 
 namespace Reddit.Repositories
 {
@@ -11,9 +12,18 @@ namespace Reddit.Repositories
         {
             _context = applcationDBContext;
         }
-        public async Task<PagedList<Post>> GetPosts(int page, int pageSize, string? searchTerm)
+        public async Task<PagedList<Post>> GetPosts(int page, int pageSize, string? searchTerm, string? SortTerm, bool? isAscending = true)
         {
             var posts =  _context.Posts.AsQueryable();
+
+            if (isAscending == false) {
+                posts = posts.OrderByDescending(GetSortExpression(searchTerm));    
+            }
+            else
+            {
+                posts = posts.OrderBy(GetSortExpression(searchTerm));
+            }
+
 
             if (!string.IsNullOrEmpty(searchTerm))
             {
@@ -22,6 +32,16 @@ namespace Reddit.Repositories
             }
 
             return await PagedList<Post>.CreateAsync(posts, page, pageSize);
+        }
+
+        public Expression<Func<Post, object>> GetSortExpression(string? sortTerm) {
+        sortTerm = sortTerm?.ToLower();
+            return sortTerm switch
+            {
+            "positivity" => post => (post.Upvotes) / (post.Upvotes + post.Downvotes),
+            "popular" => post => post.Upvotes + post.Downvotes,
+             _ => post => post.Id
+         };
         }
     }
 }
