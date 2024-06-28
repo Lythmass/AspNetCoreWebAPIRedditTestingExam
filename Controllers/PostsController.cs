@@ -4,6 +4,7 @@ using Reddit;
 using Reddit.Dtos;
 using Reddit.Mapper;
 using Reddit.Models;
+using Reddit.Repositories;
 
 namespace Reddit.Controllers
 {
@@ -13,18 +14,23 @@ namespace Reddit.Controllers
     {
         private readonly ApplicationDbContext _context;
         private readonly IMapper _mapper;
+        private readonly IPostsRepository _postsRepository;
 
         public PostsController(ApplicationDbContext context, IMapper mapper)
         {
             _context = context;
             _mapper = mapper;
+            _postsRepository = postsRepository;
         }
 
         // GET: api/Posts
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Post>>> GetPosts()
+        public async Task<ActionResult<PagedList<Post>>> GetPosts(string? sortTearm, bool? isAscending, int page=1, int pageSize=3, string? searchTerm = null)
         {
-            return await _context.Posts.ToListAsync();
+
+         //   return await _context.Posts.Skip(3).Take(10).ToListAsync();
+        //   return await PagedList<Post>.CreateAsync(_context.Posts, page, pageSize);
+        return await _postsRepository.GetPosts(page, pageSize, searchTerm, sortTearm, isAscending);
         }
 
         // GET: api/Posts/5
@@ -78,6 +84,7 @@ namespace Reddit.Controllers
         public async Task<ActionResult<Post>> PostPost(CreatePostDto createPostDto)
         {
             var post = new Post() { Title = createPostDto.Title, Content = createPostDto.Content };
+            var post2 = _mapper.toPost(createPostDto);  
 
             _context.Posts.Add(post);
             await _context.SaveChangesAsync();
