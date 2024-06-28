@@ -1,27 +1,20 @@
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Reddit;
+using Reddit.Filters;
 using Reddit.Mapper;
-using System.Text.Json.Serialization;
+using Reddit.Middlewares;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
-builder.Services.AddControllers()
-    .AddJsonOptions(options =>
-{
-    options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
-});
+builder.Services.AddControllers(options => options.Filters.Add<ModelValidationActionFilter>());
 
+// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-builder.Services.AddDbContext<ApplicationDbContext>(options => {
-    options.UseSqlite(builder.Configuration.GetConnectionString("SqliteDb"));
-    options.UseLazyLoadingProxies();
-    options.LogTo(Console.WriteLine, LogLevel.Information);
-    options.EnableSensitiveDataLogging();
-});
-
+builder.Services.AddDbContext<ApplcationDBContext>(options => options.UseSqlite(builder.Configuration.GetConnectionString("SqliteDb")));
 builder.Services.AddCors(options =>
 {
     options.AddDefaultPolicy(
@@ -40,6 +33,16 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+app.Use(async (context, next) =>
+{
+   context.Response.Headers.Add("Content-Type", "application/json");
+   await next();
+});
+
+
+app.UseMiddleware<ExceptionHandlingMiddleware>();
+app.MapGet("/throws", (context) => throw new Exception("Exception my bad"));
 
 app.UseHttpsRedirection();
 app.UseCors();

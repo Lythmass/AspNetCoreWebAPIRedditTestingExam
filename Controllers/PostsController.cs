@@ -77,7 +77,7 @@ namespace Reddit.Controllers
         [HttpPost]
         public async Task<ActionResult<Post>> PostPost(CreatePostDto createPostDto)
         {
-            var post = _mapper.toPost(createPostDto);
+            var post = new Post() { Title = createPostDto.Title, Content = createPostDto.Content };
 
             _context.Posts.Add(post);
             await _context.SaveChangesAsync();
