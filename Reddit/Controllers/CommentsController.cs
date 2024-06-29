@@ -10,9 +10,9 @@ namespace Reddit.Controllers
     [ApiController]
     public class CommentsController : ControllerBase
     {
-        private readonly ApplcationDBContext _context;
+        private readonly ApplicationDbContext _context;
 
-        public CommentsController(ApplcationDBContext context)
+        public CommentsController(ApplicationDbContext context)
         {
             _context = context;
         }

@@ -10,7 +10,7 @@ using Reddit;
 
 namespace Reddit.Migrations
 {
-    [DbContext(typeof(ApplcationDBContext))]
+    [DbContext(typeof(ApplicationDbContext))]
     [Migration("20240316131523_CommentAdded")]
     partial class CommentAdded
     {

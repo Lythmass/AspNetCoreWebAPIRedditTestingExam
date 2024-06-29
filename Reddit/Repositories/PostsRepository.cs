@@ -6,9 +6,9 @@ namespace Reddit.Repositories
 {
     public class PostsRepository : IPostsRepository
     {
-        private readonly ApplcationDBContext _context;
+        private readonly ApplicationDbContext _context;
 
-        public PostsRepository(ApplcationDBContext applcationDBContext)
+        public PostsRepository(ApplicationDbContext applcationDBContext)
         {
             _context = applcationDBContext;
         }

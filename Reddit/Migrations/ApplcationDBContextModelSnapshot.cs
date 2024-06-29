@@ -9,7 +9,7 @@ using Reddit;
 
 namespace Reddit.Migrations
 {
-    [DbContext(typeof(ApplcationDBContext))]
+    [DbContext(typeof(ApplicationDbContext))]
     partial class ApplcationDBContextModelSnapshot : ModelSnapshot
     {
         protected override void BuildModel(ModelBuilder modelBuilder)

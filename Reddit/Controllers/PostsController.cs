@@ -16,7 +16,7 @@ namespace Reddit.Controllers
         private readonly IMapper _mapper;
         private readonly IPostsRepository _postsRepository;
 
-        public PostsController(ApplicationDbContext context, IMapper mapper)
+        public PostsController(ApplicationDbContext context, IMapper mapper, IPostsRepository postsRepository)
         {
             _context = context;
             _mapper = mapper;
