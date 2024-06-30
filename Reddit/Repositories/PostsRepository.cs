@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Reddit.Models;
+using System.Linq;
 using System.Linq.Expressions;
 
 namespace Reddit.Repositories
@@ -14,14 +15,16 @@ namespace Reddit.Repositories
         }
         public async Task<PagedList<Post>> GetPosts(int page, int pageSize, string? searchTerm, string? SortTerm, bool? isAscending = true)
         {
-            var posts =  _context.Posts.AsQueryable();
+            var posts = _context.Posts.AsQueryable();
 
             if (isAscending == false) {
-                posts = posts.OrderByDescending(GetSortExpression(searchTerm));    
+                posts = posts.OrderByDescending(GetSortExpression(SortTerm));
+             //   posts = posts.OrderDescending(GetSortExpression(searchTerm));
+
             }
             else
             {
-                posts = posts.OrderBy(GetSortExpression(searchTerm));
+                posts = posts.OrderBy(GetSortExpression(SortTerm));
             }
 
 
