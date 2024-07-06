@@ -15,12 +15,16 @@ namespace Reddit.Repositories
         }
         public async Task<PagedList<Post>> GetPosts(int page, int pageSize, string? searchTerm, string? SortTerm, bool? isAscending = true)
         {
+            if (page <= 0)
+                throw new ArgumentOutOfRangeException(nameof(page), "Page must be greater than 0");
+
+            if (pageSize <= 0)
+                throw new ArgumentOutOfRangeException(nameof(pageSize), "PageSize must be greater than 0");
+
             var posts = _context.Posts.AsQueryable();
 
             if (isAscending == false) {
                 posts = posts.OrderByDescending(GetSortExpression(SortTerm));
-             //   posts = posts.OrderDescending(GetSortExpression(searchTerm));
-
             }
             else
             {

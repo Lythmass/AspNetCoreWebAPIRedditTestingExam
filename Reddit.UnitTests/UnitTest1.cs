@@ -11,8 +11,9 @@ public class UnitTest1
     private IPostsRepository GetPostsRepostory()
     {
 
+        var dbName = Guid.NewGuid().ToString();     // give unqie name to the database, so that different tests don't interfere with each other
         var options = new DbContextOptionsBuilder<ApplicationDbContext>()
-            .UseInMemoryDatabase(databaseName: "Reddit")
+            .UseInMemoryDatabase(databaseName: dbName)
             .Options;
 
         var dbContext = new ApplicationDbContext(options);
@@ -53,5 +54,23 @@ public class UnitTest1
 
         //  Positivity -> Assert.Equal("Title 4", posts.Items.First().Title); 
         Assert.Equal("Title 5", posts.Items.First().Title);
+    }
+
+    [Fact]
+    public async Task GetPosts_InvalidPage_ThrowsArgumentException()
+    {
+        var repository = GetPostsRepostory();
+
+        var exception = await Assert.ThrowsAsync<ArgumentOutOfRangeException>(() => repository.GetPosts(page: 0, pageSize: 10, searchTerm: null, SortTerm: null));
+        Assert.Equal("page", exception.ParamName);
+    }
+
+    [Fact]
+    public async Task GetPosts_InvalidPageSize_ThrowsArgumentOutOfRangeException()
+    {
+        var repository = GetPostsRepostory();
+
+        var exception = await Assert.ThrowsAsync<ArgumentOutOfRangeException>(() => repository.GetPosts(page: 1, pageSize: 0, searchTerm: null, SortTerm: null));
+        Assert.Equal("pageSize", exception.ParamName);
     }
 }
