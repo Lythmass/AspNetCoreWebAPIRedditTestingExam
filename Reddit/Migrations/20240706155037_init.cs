@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Reddit.Migrations
 {
     /// <inheritdoc />
-    public partial class Init : Migration
+    public partial class init : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -47,7 +47,7 @@ namespace Reddit.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "CommunitySubscriptions",
+                name: "CommunityUser",
                 columns: table => new
                 {
                     SubscribedCommunitiesId = table.Column<int>(type: "INTEGER", nullable: false),
@@ -55,15 +55,15 @@ namespace Reddit.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_CommunitySubscriptions", x => new { x.SubscribedCommunitiesId, x.SubscribersId });
+                    table.PrimaryKey("PK_CommunityUser", x => new { x.SubscribedCommunitiesId, x.SubscribersId });
                     table.ForeignKey(
-                        name: "FK_CommunitySubscriptions_Communities_SubscribedCommunitiesId",
+                        name: "FK_CommunityUser_Communities_SubscribedCommunitiesId",
                         column: x => x.SubscribedCommunitiesId,
                         principalTable: "Communities",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_CommunitySubscriptions_Users_SubscribersId",
+                        name: "FK_CommunityUser_Users_SubscribersId",
                         column: x => x.SubscribersId,
                         principalTable: "Users",
                         principalColumn: "Id",
@@ -78,12 +78,11 @@ namespace Reddit.Migrations
                         .Annotation("Sqlite:Autoincrement", true),
                     Title = table.Column<string>(type: "TEXT", nullable: false),
                     Content = table.Column<string>(type: "TEXT", nullable: false),
-                    AuthorId = table.Column<int>(type: "INTEGER", nullable: true),
+                    AuthorId = table.Column<int>(type: "INTEGER", nullable: false),
                     Upvotes = table.Column<int>(type: "INTEGER", nullable: false),
                     Downvotes = table.Column<int>(type: "INTEGER", nullable: false),
-                    CreateAt = table.Column<DateTime>(type: "TEXT", nullable: false),
-                    UpdatedAt = table.Column<DateTime>(type: "TEXT", nullable: true),
-                    CommunityId = table.Column<int>(type: "INTEGER", nullable: false)
+                    CommunityId = table.Column<int>(type: "INTEGER", nullable: true),
+                    UserId = table.Column<int>(type: "INTEGER", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -92,11 +91,10 @@ namespace Reddit.Migrations
                         name: "FK_Posts_Communities_CommunityId",
                         column: x => x.CommunityId,
                         principalTable: "Communities",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                     table.ForeignKey(
-                        name: "FK_Posts_Users_AuthorId",
-                        column: x => x.AuthorId,
+                        name: "FK_Posts_Users_UserId",
+                        column: x => x.UserId,
                         principalTable: "Users",
                         principalColumn: "Id");
                 });
@@ -107,7 +105,10 @@ namespace Reddit.Migrations
                 {
                     Id = table.Column<int>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
-                    PostId = table.Column<int>(type: "INTEGER", nullable: true)
+                    Content = table.Column<string>(type: "TEXT", nullable: false),
+                    AuthorId = table.Column<int>(type: "INTEGER", nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "TEXT", nullable: false),
+                    PostId = table.Column<int>(type: "INTEGER", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -116,7 +117,8 @@ namespace Reddit.Migrations
                         name: "FK_Comments_Posts_PostId",
                         column: x => x.PostId,
                         principalTable: "Posts",
-                        principalColumn: "Id");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateIndex(
@@ -130,19 +132,19 @@ namespace Reddit.Migrations
                 column: "OwnerId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_CommunitySubscriptions_SubscribersId",
-                table: "CommunitySubscriptions",
+                name: "IX_CommunityUser_SubscribersId",
+                table: "CommunityUser",
                 column: "SubscribersId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Posts_AuthorId",
-                table: "Posts",
-                column: "AuthorId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Posts_CommunityId",
                 table: "Posts",
                 column: "CommunityId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Posts_UserId",
+                table: "Posts",
+                column: "UserId");
         }
 
         /// <inheritdoc />
@@ -152,7 +154,7 @@ namespace Reddit.Migrations
                 name: "Comments");
 
             migrationBuilder.DropTable(
-                name: "CommunitySubscriptions");
+                name: "CommunityUser");
 
             migrationBuilder.DropTable(
                 name: "Posts");

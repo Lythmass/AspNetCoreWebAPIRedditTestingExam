@@ -2,7 +2,6 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
-using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Reddit;
 
@@ -11,18 +10,12 @@ using Reddit;
 namespace Reddit.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240324215748_Init")]
-    partial class Init
+    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
     {
-        /// <inheritdoc />
-        protected override void BuildTargetModel(ModelBuilder modelBuilder)
+        protected override void BuildModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
-            modelBuilder
-                .HasAnnotation("ProductVersion", "8.0.3")
-                .HasAnnotation("Proxies:ChangeTracking", false)
-                .HasAnnotation("Proxies:CheckEquality", false)
-                .HasAnnotation("Proxies:LazyLoading", true);
+            modelBuilder.HasAnnotation("ProductVersion", "8.0.3");
 
             modelBuilder.Entity("CommunityUser", b =>
                 {
@@ -36,7 +29,7 @@ namespace Reddit.Migrations
 
                     b.HasIndex("SubscribersId");
 
-                    b.ToTable("CommunitySubscriptions", (string)null);
+                    b.ToTable("CommunityUser");
                 });
 
             modelBuilder.Entity("Reddit.Models.Comment", b =>
@@ -45,7 +38,17 @@ namespace Reddit.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
-                    b.Property<int?>("PostId")
+                    b.Property<int>("AuthorId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("Content")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("PostId")
                         .HasColumnType("INTEGER");
 
                     b.HasKey("Id");
@@ -88,17 +91,14 @@ namespace Reddit.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
-                    b.Property<int?>("AuthorId")
+                    b.Property<int>("AuthorId")
                         .HasColumnType("INTEGER");
 
-                    b.Property<int>("CommunityId")
+                    b.Property<int?>("CommunityId")
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("Content")
                         .IsRequired()
-                        .HasColumnType("TEXT");
-
-                    b.Property<DateTime>("CreateAt")
                         .HasColumnType("TEXT");
 
                     b.Property<int>("Downvotes")
@@ -108,17 +108,17 @@ namespace Reddit.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.Property<DateTime?>("UpdatedAt")
-                        .HasColumnType("TEXT");
-
                     b.Property<int>("Upvotes")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int?>("UserId")
                         .HasColumnType("INTEGER");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("AuthorId");
-
                     b.HasIndex("CommunityId");
+
+                    b.HasIndex("UserId");
 
                     b.ToTable("Posts");
                 });
@@ -155,9 +155,13 @@ namespace Reddit.Migrations
 
             modelBuilder.Entity("Reddit.Models.Comment", b =>
                 {
-                    b.HasOne("Reddit.Models.Post", null)
+                    b.HasOne("Reddit.Models.Post", "Post")
                         .WithMany("Comments")
-                        .HasForeignKey("PostId");
+                        .HasForeignKey("PostId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Post");
                 });
 
             modelBuilder.Entity("Reddit.Models.Community", b =>
@@ -172,19 +176,13 @@ namespace Reddit.Migrations
 
             modelBuilder.Entity("Reddit.Models.Post", b =>
                 {
-                    b.HasOne("Reddit.Models.User", "Author")
+                    b.HasOne("Reddit.Models.Community", null)
                         .WithMany("Posts")
-                        .HasForeignKey("AuthorId");
+                        .HasForeignKey("CommunityId");
 
-                    b.HasOne("Reddit.Models.Community", "Community")
+                    b.HasOne("Reddit.Models.User", null)
                         .WithMany("Posts")
-                        .HasForeignKey("CommunityId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Author");
-
-                    b.Navigation("Community");
+                        .HasForeignKey("UserId");
                 });
 
             modelBuilder.Entity("Reddit.Models.Community", b =>
