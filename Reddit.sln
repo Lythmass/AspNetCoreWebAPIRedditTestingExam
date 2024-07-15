@@ -5,6 +5,8 @@ VisualStudioVersion = 17.9.34616.47
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Reddit", "Reddit\Reddit.csproj", "{47D6CAFC-3BD5-4A72-BA61-63C98A3E7BFD}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RedditTests", "RedditTests\RedditTests.csproj", "{9B27DBE9-4CF2-4DE9-9E1C-F09C0F3A9751}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{47D6CAFC-3BD5-4A72-BA61-63C98A3E7BFD}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{47D6CAFC-3BD5-4A72-BA61-63C98A3E7BFD}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{47D6CAFC-3BD5-4A72-BA61-63C98A3E7BFD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9B27DBE9-4CF2-4DE9-9E1C-F09C0F3A9751}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9B27DBE9-4CF2-4DE9-9E1C-F09C0F3A9751}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9B27DBE9-4CF2-4DE9-9E1C-F09C0F3A9751}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9B27DBE9-4CF2-4DE9-9E1C-F09C0F3A9751}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
